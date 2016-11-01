@@ -233,7 +233,7 @@ def main():
 	parser.add_option("-i", dest="in Dir", help="(Required) Location of input data")
 	parser.add_option("-o", dest="out Dir", help="(Required) Location of output data to be saved")
 	parser.add_option("-r", dest="Test Image", help="(Required) reference image")
-    parser.add_option("-n", dest="num process", default = 4, help="number of processes")
+    	parser.add_option("-n", dest="num process", default = 4, help="number of processes")
 	
 	(ops, arg) = parser.parse_args()
 
@@ -245,7 +245,7 @@ def main():
 	elif not ops.out_Dir:
 		parser.print_help()
 		sys.exit(1)
-    elif not ops.Test_Image:
+    	elif not ops.Test_Image:
 		parser.print_help()
 		sys.exit(1)
 
