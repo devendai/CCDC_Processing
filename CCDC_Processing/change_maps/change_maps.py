@@ -2,11 +2,11 @@
 Change Maps for CCDC visualizations
 """
 
-import os
+import os, sys
 import datetime
 import logging
 import multiprocessing as mp
-
+from optparse import OptionParser 
 from osgeo import gdal, osr
 import numpy as np
 import scipy.io as sio
@@ -225,12 +225,38 @@ def multi_run(input_dir, output_dir, ref_image, num_procs):
         mp.Process(target=multi_worker, args=(input_q, output_q)).start()
 
     multi_output(output_dir, ref_image, output_q, worker_count)
+    
+def main():
+	parser = OptionParser()
 
+   # define options
+	parser.add_option("-i", dest="in Dir", help="(Required) Location of input data")
+	parser.add_option("-o", dest="out Dir", help="(Required) Location of output data to be saved")
+	parser.add_option("-r", dest="Test Image", help="(Required) reference image")
+    parser.add_option("-n", dest="num process", default = 4, help="number of processes")
+	
+	(ops, arg) = parser.parse_args()
+
+	if len(arg) == 1:
+		parser.print_help()
+	elif not ops.in_Dir:
+		parser.print_help()
+		sys.exit(1)
+	elif not ops.out_Dir:
+		parser.print_help()
+		sys.exit(1)
+    elif not ops.Test_Image:
+		parser.print_help()
+		sys.exit(1)
+
+	else:
+		multi_run(ops.in_Dir, ops.out_Dir, ops.Test_Image, ops.num_process)  
 
 if __name__ == '__main__':
-    indir = r'D:\lcmap\matlab_compare\WA-08\zhe\TSFitMap'
-    outdir = r'D:\lcmap\matlab_compare\WA-08\klsmith\changemaps'
+    main()
+   ## indir = r'D:\lcmap\matlab_compare\WA-08\zhe\TSFitMap'
+   ## outdir = r'D:\lcmap\matlab_compare\WA-08\klsmith\changemaps'
 
-    test_image = r'D:\lcmap\matlab_compare\WA-08\LT50460271990297\LT50460271990297PAC04_MTLstack'
-    # single_run(indir, outdir, test_image)
-    multi_run(indir, outdir, test_image, 4)
+   ## test_image = r'D:\lcmap\matlab_compare\WA-08\LT50460271990297\LT50460271990297PAC04_MTLstack'
+    ### single_run(indir, outdir, test_image)
+   ## multi_run(indir, outdir, test_image, 4)
