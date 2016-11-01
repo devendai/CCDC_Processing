@@ -5,7 +5,7 @@ import tarfile
 import shutil
 import logging
 import sys
-
+from optparse import OptionParser 
 from ard_filter import ARDFiltering
 from ard_filters import Fill_10percent, Fill_20percent, NoFill_10percent, NoFill_20percent
 
@@ -201,16 +201,39 @@ def progress(prog_q, worker_num):
         if count >= worker_num - 1:
             break
 
+def main():
+	parser = OptionParser()
+   # define options
+	parser.add_option("-i", dest="in_Dir", help="(Required) Location of input data")
+	parser.add_option("-o", dest="out_Dir", help="(Required) Location of output data to be saved")
+	parser.add_option("-n", dest="num_worker", default = 20, help="number of workder")
+	
+	(ops, arg) = parser.parse_args()
+
+	if len(arg) == 1:
+		parser.print_help()
+	elif not ops.in_Dir:
+		parser.print_help()
+		sys.exit(1)
+	elif not ops.out_Dir:
+		parser.print_help()
+		sys.exit(1)
+
+	else:
+		create_tiles(ops.in_Dir, ops.out_Dir, ops.num_worker)   
 
 if __name__ == '__main__':
+    main()
     # input_path = raw_input('Tarball inputs: ')
     # output_path = raw_input('Output directory: ')
     # num = raw_input('Number of workers: ')
+    '''
     if len(sys.argv) > 1:
         create_tiles(sys.argv[1], sys.argv[2], int(sys.argv[3]))
 
     input_path = '/shared/users/klsmith/klsmith@usgs.gov-06142016-094545'
     output_path = '/shared/users/klsmith/AL-h07v09'
     num = 20
-
+    
     create_tiles(input_path, output_path, int(num))
+    '''
